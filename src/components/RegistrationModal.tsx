@@ -18,7 +18,6 @@ import { Info } from "lucide-react";
 import {
 	Form,
 	FormControl,
-	FormDescription,
 	FormField,
 	FormItem,
 	FormLabel,
@@ -27,7 +26,6 @@ import {
 import { Pillar } from "@/types/Pillar";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { ZnnAddress } from "@/lib/znn-address";
 import { hexToBuffer } from "@/lib/utils";
 import {
@@ -39,8 +37,6 @@ import {
 } from "@/lib/validation/pillar";
 import { useToast } from "@/hooks/use-toast";
 import PillarIcon from "./ui/icons/pillar-icon";
-
-const formSchema = pillarFormSchema;
 
 type FormData = PillarFormSchema;
 
@@ -73,7 +69,7 @@ export default function RegistrationModal({
 			if (!ZnnAddress.verifyPublicKey(pillar.alphanet_pillar_address, pubKeyBuffer)) {
 				form.setError("publicKey", {
 					type: "manual",
-					message: "Public key does not match pillar's address"
+					message: "Public key does not match pillar&apos;s address"
 				});
 				return;
 			}
@@ -121,7 +117,8 @@ export default function RegistrationModal({
 			});
 
 			onClose();
-		} catch (error) {
+		} catch (err) {
+			console.error(err);
 			toast({
 				variant: "destructive",
 				title: "Error",
@@ -153,7 +150,7 @@ export default function RegistrationModal({
 												<Info className="h-4 w-4 text-zinc-400 hover:text-foreground transition-colors" />
 											</TooltipTrigger>
 											<TooltipContent side="top" align="center" className="text-[13px]">
-												<p>{pillar.alphanet_pillar_name}'s public key (64 hexadecimal characters)</p>
+												<p>{pillar.alphanet_pillar_name}&apos;s public key (64 hexadecimal characters)</p>
 											</TooltipContent>
 										</Tooltip>
 									</div>
@@ -181,8 +178,6 @@ export default function RegistrationModal({
 												className="font-space"
 											/>
 											<div className="absolute top-0 right-0 bottom-0 w-12 pointer-events-none bg-gradient-to-r from-transparent to-background" />
-
-
 										</div>
 									</FormControl>
 									<FormMessage className="text-xs text-center" />
@@ -396,7 +391,7 @@ export default function RegistrationModal({
 													<Info className="h-4 w-4 text-zinc-400 hover:text-foreground transition-colors" />
 												</TooltipTrigger>
 												<TooltipContent side="top" align="center" className="text-[13px]">
-													<p>{pillar.alphanet_pillar_name}'s 128-character Ed25519 signature in hexadecimal format</p>
+													<p>{pillar.alphanet_pillar_name}&apos;s 128-character Ed25519 signature in hexadecimal format</p>
 												</TooltipContent>
 											</Tooltip>
 										</div>

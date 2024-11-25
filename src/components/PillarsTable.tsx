@@ -54,7 +54,6 @@ export default function PillarsTable({ searchQuery }: PillarTableProps) {
 		data: pillars,
 		error,
 		isLoading,
-		mutate,
 	} = useSWR<Pillar[]>("/api/pillars");
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [selectedPillar, setSelectedPillar] = useState<Pillar | null>(null);

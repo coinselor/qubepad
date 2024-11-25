@@ -38,7 +38,7 @@ const HyperCube = () => {
 			const z1 = y * sn[0] + z * cs[0];
 			const x2 = x1 * cs[1] + z1 * sn[1];
 			const y2 = y1;
-			const z2 = -x1 * sn[1] + z1 * cs[1];
+			const _z2 = -x1 * sn[1] + z1 * cs[1];
 			const x3 = x2 * cs[2] - y2 * sn[2];
 			const y3 = x2 * sn[2] + y2 * cs[2];
 			return [x3, y3];

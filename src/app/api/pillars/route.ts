@@ -47,6 +47,7 @@ export async function PUT(request: Request) {
 				);
 			}
 		} catch (error) {
+			console.error('Invalid public key format:', error);
 			return NextResponse.json(
 				{ error: "Invalid public key format" },
 				{ status: 400 }
@@ -107,6 +108,7 @@ export async function PUT(request: Request) {
 			);
 		}
 	} catch (error) {
+		console.error('Server error:', error);
 		return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
 	}
 }
