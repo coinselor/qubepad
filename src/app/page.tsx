@@ -56,20 +56,20 @@ const HyperCube = () => {
 		const bounceHeight = 70;
 		return {
 			y: [
-				baseHeight,           // Starting at rest
-				baseHeight - bounceHeight, // Peak of bounce
-				baseHeight + 2,       // Slight squash on impact
-				baseHeight            // Reset position
+				baseHeight,
+				baseHeight - bounceHeight,
+				baseHeight + 2,
+				baseHeight
 			],
 			transition: {
 				y: {
-					duration: 2.4,    // Doubled the duration
+					duration: 2.4,
 					repeat: Infinity,
-					times: [0, 0.25, 0.95, 1], // Full up and down motion
+					times: [0, 0.25, 0.95, 1],
 					ease: [
-						"easeOut",    // Smooth deceleration going up
-						"easeIn",     // Natural acceleration falling down
-						"easeOut"     // Quick bounce response
+						"easeOut",
+						"easeIn",
+						"easeOut"
 					]
 				}
 			}

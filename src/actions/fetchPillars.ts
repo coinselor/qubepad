@@ -10,7 +10,6 @@ export async function fetchPillars(): Promise<Pillar[]> {
   const result = await db.select().from(pillarsTable).orderBy(desc(pillarsTable.weight));
   return result.map(row => ({
     ...row,
-    status: row.status as "Pending" | "Submitted" | "Validated" || "Pending"
+    status: row.status as "Pending" | "Registered"
   }));
 }
-
