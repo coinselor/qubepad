@@ -51,7 +51,7 @@ export default function RegistrationModal({
 	const form = useForm<FormData>({
 		resolver: zodResolver(pillarFormSchema),
 		defaultValues: {
-			publicKey: "",
+			publicKey: pillar.alphanet_pillar_public_key || "",
 			hqzName: pillar.hqz_pillar_name || "",
 			hqzOwnerAddress: pillar.hqz_owner_address || "",
 			hqzWithdrawAddress: pillar.hqz_withdraw_address || "",
@@ -61,7 +61,6 @@ export default function RegistrationModal({
 		mode: "onChange",
 	});
 
-	const publicKeyValue = form.watch("publicKey");
 
 	const onSubmit = async (data: FormData) => {
 		try {
@@ -141,48 +140,50 @@ export default function RegistrationModal({
 						<FormField
 							control={form.control}
 							name="publicKey"
-							render={({ field }) => (
-								<FormItem>
-									<div className="flex items-center gap-2">
-										<FormLabel className="text-[14px]">Public Key</FormLabel>
-										<Tooltip delayDuration={200} defaultOpen={false}>
-											<TooltipTrigger asChild>
-												<Info className="h-4 w-4 text-zinc-400 hover:text-foreground transition-colors" />
-											</TooltipTrigger>
-											<TooltipContent side="top" align="center" className="text-[13px]">
-												<p>{pillar.alphanet_pillar_name}&apos;s public key (64 hexadecimal characters)</p>
-											</TooltipContent>
-										</Tooltip>
-									</div>
-									<FormControl>
-										<div className="space-y-2 relative">
-											{publicKeyValue && (
-												<div className="absolute right-0 -top-5 text-[13px] opacity-80 text-center">
-													<span className={`${publicKeyValue.length === 64
-														? "text-green-600"
-														: "text-gray-500"
-														}`}>
-														{publicKeyValue.length}/64 characters
-													</span>
-												</div>
-											)}
-											<Input
-												placeholder="fcf99ab256464f03e3..."
-												{...field}
-												onChange={(e) => {
-													const value = e.target.value;
-													field.onChange(value);
-												}}
-												maxLength={64}
-												error={!!form.formState.errors.publicKey}
-												className="font-space"
-											/>
-											<div className="absolute top-0 right-0 bottom-0 w-12 pointer-events-none bg-gradient-to-r from-transparent to-background" />
+							disabled={true}
+							render={({ field }) => {
+								const publicKeyValue = field.value;
+								return (
+									<FormItem>
+										<div className="flex items-center gap-2">
+											<FormLabel className="text-[14px]">Public Key</FormLabel>
+											<Tooltip delayDuration={200} defaultOpen={false}>
+												<TooltipTrigger asChild>
+													<Info className="h-4 w-4 text-zinc-400 hover:text-foreground transition-colors" />
+												</TooltipTrigger>
+												<TooltipContent side="top" align="center" className="text-[13px]">
+													<p>{pillar.alphanet_pillar_name}&apos;s public key (64 hexadecimal characters)</p>
+												</TooltipContent>
+											</Tooltip>
 										</div>
-									</FormControl>
-									<FormMessage className="text-xs text-center" />
-								</FormItem>
-							)}
+										<FormControl>
+											<div className="space-y-2 relative">
+												{publicKeyValue && (
+													<div className="absolute right-0 -top-5 text-[13px] opacity-80 text-center">
+														<span className={`${publicKeyValue.length === 64
+															? "text-green-600"
+															: "text-gray-500"
+															}`}>
+															{publicKeyValue.length}/64 characters
+														</span>
+													</div>
+												)}
+												<Input
+													placeholder="fcf99ab256464f03e3..."
+													{...field}
+													readOnly
+													className={`${form.formState.errors.publicKey ? "" : "bg-green-950/20 border-green-600/40 text-green-400"}`}
+
+													maxLength={64}
+													error={!!form.formState.errors.publicKey}
+												/>
+												<div className="absolute top-0 right-0 bottom-0 w-12 pointer-events-none bg-gradient-to-r from-transparent to-background" />
+											</div>
+										</FormControl>
+										<FormMessage className="text-xs text-center" />
+									</FormItem>
+								)
+							}}
 						/>
 						<FormField
 							control={form.control}
