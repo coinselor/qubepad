@@ -14,7 +14,9 @@ import {
 } from "@/components/ui/tooltip";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Info } from "lucide-react";
+import { Info, Copy } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { motion, AnimatePresence } from "framer-motion";
 import {
 	Form,
 	FormControl,
@@ -37,6 +39,7 @@ import {
 } from "@/lib/validation/pillar";
 import { useToast } from "@/hooks/use-toast";
 import PillarIcon from "./ui/icons/pillar-icon";
+import { useState } from "react";
 
 type FormData = PillarFormSchema;
 
@@ -61,6 +64,43 @@ export default function RegistrationModal({
 		mode: "onChange",
 	});
 
+	const messageString = `${pillar.alphanet_pillar_name} ${form.watch("hqzName") || "[hqz_pillar_name]"
+		} ${form.watch("hqzOwnerAddress") || "[hqz_owner_address]"
+		} ${form.watch("hqzWithdrawAddress") || "[hqz_withdraw_address]"
+		} ${form.watch("hqzProducerAddress") || "[hqz_producer_address]"
+		} HYPERQUBE LAUNCH`;
+
+	const getFormProgress = () => {
+		const fields = ['hqzName', 'hqzOwnerAddress', 'hqzWithdrawAddress', 'hqzProducerAddress'];
+		return fields.map(field => {
+			const fieldState = form.getFieldState(field);
+			return !fieldState.invalid && form.getValues(field);
+		});
+	};
+
+	const validSteps = getFormProgress();
+	const isFormComplete = validSteps.every(step => step);
+
+	const [isCopied, setIsCopied] = useState(false);
+
+	const copyMessageString = async () => {
+		try {
+			await navigator.clipboard.writeText(messageString);
+			setIsCopied(true);
+			setTimeout(() => setIsCopied(false), 2000);
+			toast({
+				title: "Copied!",
+				description: "Message string copied to clipboard",
+			});
+		} catch (err) {
+			toast({
+				variant: "destructive",
+				title: "Error",
+				description: "Failed to copy message string",
+			});
+			console.error(err);
+		}
+	};
 
 	const onSubmit = async (data: FormData) => {
 		try {
@@ -140,11 +180,10 @@ export default function RegistrationModal({
 						<FormField
 							control={form.control}
 							name="publicKey"
-							disabled={true}
 							render={({ field }) => {
 								const publicKeyValue = field.value;
 								return (
-									<FormItem>
+									<FormItem className="opacity-70">
 										<div className="flex items-center gap-2">
 											<FormLabel className="text-[14px]">Public Key</FormLabel>
 											<Tooltip delayDuration={200} defaultOpen={false}>
@@ -172,7 +211,8 @@ export default function RegistrationModal({
 													placeholder="fcf99ab256464f03e3..."
 													{...field}
 													readOnly
-													className={`${form.formState.errors.publicKey ? "" : "bg-green-950/20 border-green-600/40 text-green-400"}`}
+													tabIndex={-1}
+													className={`${form.formState.errors.publicKey ? "" : "!bg-green-950/40 !border-green-600/40 text-green-400"} ${publicKeyValue?.length === 64 ? "!border-l-8 !border-l-green-600" : ""}`}
 
 													maxLength={64}
 													error={!!form.formState.errors.publicKey}
@@ -185,6 +225,7 @@ export default function RegistrationModal({
 								)
 							}}
 						/>
+						<hr className="my-6 border-t border-dashed border-zinc-600 dark:border-zinc-800" />
 						<FormField
 							control={form.control}
 							name="hqzName"
@@ -217,6 +258,7 @@ export default function RegistrationModal({
 												)}
 												<Input
 													placeholder="my-awesome-pillar"
+													autoFocus
 													{...field}
 													onChange={(e) => {
 														const value = e.target.value;
@@ -378,6 +420,85 @@ export default function RegistrationModal({
 								)
 							}}
 						/>
+
+
+						<div className="space-y-2">
+							<div className="flex items-center gap-2">
+								<FormLabel className="text-[14px]">Message</FormLabel>
+								<Tooltip delayDuration={200}>
+									<TooltipTrigger asChild>
+										<Info className="h-4 w-4 text-zinc-400 hover:text-foreground transition-colors" />
+									</TooltipTrigger>
+									<TooltipContent side="top" align="center" className="text-[13px]">
+										<p>This is the message text that needs to be signed in ✦ s y r i u s</p>
+									</TooltipContent>
+								</Tooltip>
+							</div>
+							<div className="space-y-2">
+								<Textarea
+									value={messageString}
+									readOnly
+									disabled={true}
+									className="!font-space !text-[13px] resize-none"
+									rows={5}
+								/>
+								<div className="flex gap-1 mt-2 mb-1">
+									{validSteps.map((isValid, index) => (
+										<div
+											key={index}
+											className={`h-1 flex-1 rounded-full transition-colors duration-300 ${isValid ? 'bg-green-600' : 'bg-zinc-200 dark:bg-zinc-800'
+												}`}
+										/>
+									))}
+								</div>
+								<AnimatePresence mode="wait">
+									{messageString && (
+										<motion.div
+											initial={{ opacity: 0, scale: 0.95 }}
+											animate={{ opacity: 1, scale: 1 }}
+											exit={{ opacity: 0, scale: 0.95 }}
+											transition={{ duration: 0.2 }}
+											className="w-full"
+										>
+											<Button
+												type="button"
+												variant="outline"
+												className="w-full"
+												onClick={copyMessageString}
+												disabled={!isFormComplete}
+											>
+												<AnimatePresence mode="wait">
+													{isCopied ? (
+														<motion.div
+															key="copied"
+															initial={{ opacity: 0, y: 20 }}
+															animate={{ opacity: 1, y: 0 }}
+															exit={{ opacity: 0, y: -20 }}
+															className="flex items-center gap-2"
+														>
+															<Copy className="h-4 w-4" />
+															<span>Copied!</span>
+														</motion.div>
+													) : (
+														<motion.div
+															key="copy"
+															initial={{ opacity: 0, y: 20 }}
+															animate={{ opacity: 1, y: 0 }}
+															exit={{ opacity: 0, y: -20 }}
+															className="flex items-center gap-2"
+														>
+															<Copy className="h-4 w-4" />
+															<span>Copy Message</span>
+														</motion.div>
+													)}
+												</AnimatePresence>
+											</Button>
+										</motion.div>
+									)}
+								</AnimatePresence>
+							</div>
+						</div>
+						<hr className="my-6 border-t border-dashed border-zinc-600 dark:border-zinc-800" />
 						<FormField
 							control={form.control}
 							name="signature"
