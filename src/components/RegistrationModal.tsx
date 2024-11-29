@@ -71,7 +71,7 @@ export default function RegistrationModal({
 		} HYPERQUBE LAUNCH`;
 
 	const getFormProgress = () => {
-		const fields = ['hqzName', 'hqzOwnerAddress', 'hqzWithdrawAddress', 'hqzProducerAddress'];
+		const fields: (keyof FormData)[] = ['hqzName', 'hqzOwnerAddress', 'hqzWithdrawAddress', 'hqzProducerAddress'];
 		return fields.map(field => {
 			const fieldState = form.getFieldState(field);
 			return !fieldState.invalid && form.getValues(field);
