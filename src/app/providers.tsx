@@ -1,6 +1,5 @@
 "use client";
 import { SWRConfig } from "swr";
-import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/toaster";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
@@ -13,14 +12,8 @@ export default function Providers({ children }: { children: React.ReactNode }) {
 				refreshInterval: 300000,
 			}}
 		>
-			<TooltipProvider
-				delayDuration={100}
-				skipDelayDuration={300}
-				disableHoverableContent
-			>
-				{children}
-				<Toaster />
-			</TooltipProvider>
+			{children}
+			<Toaster />
 		</SWRConfig>
 	);
 }

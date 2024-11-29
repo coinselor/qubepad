@@ -8,10 +8,10 @@ import {
 	DialogDescription,
 } from "@/components/ui/dialog";
 import {
-	Tooltip,
-	TooltipContent,
-	TooltipTrigger,
-} from "@/components/ui/tooltip";
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Info, Copy } from "lucide-react";
@@ -186,14 +186,14 @@ export default function RegistrationModal({
 									<FormItem className="opacity-70">
 										<div className="flex items-center gap-2">
 											<FormLabel className="text-[14px]">Public Key</FormLabel>
-											<Tooltip delayDuration={200} defaultOpen={false}>
-												<TooltipTrigger asChild>
-													<Info className="h-4 w-4 text-zinc-400 hover:text-foreground transition-colors" />
-												</TooltipTrigger>
-												<TooltipContent side="top" align="center" className="text-[13px]">
+											<Popover>
+												<PopoverTrigger asChild>
+													<Info className="h-4 w-4 text-zinc-400 hover:text-foreground transition-colors cursor-pointer" />
+												</PopoverTrigger>
+												<PopoverContent side="right" align="center" className="w-auto p-2 text-[13px]">
 													<p>{pillar.alphanet_pillar_name}&apos;s public key (64 hexadecimal characters)</p>
-												</TooltipContent>
-											</Tooltip>
+												</PopoverContent>
+											</Popover>
 										</div>
 										<FormControl>
 											<div className="space-y-2 relative">
@@ -211,9 +211,8 @@ export default function RegistrationModal({
 													placeholder="fcf99ab256464f03e3..."
 													{...field}
 													readOnly
-													tabIndex={-1}
 													className={`${form.formState.errors.publicKey ? "" : "!bg-green-950/40 !border-green-600/40 text-green-400"} ${publicKeyValue?.length === 64 ? "!border-l-8 !border-l-green-600" : ""}`}
-
+													tabIndex={-1}
 													maxLength={64}
 													error={!!form.formState.errors.publicKey}
 												/>
@@ -235,14 +234,14 @@ export default function RegistrationModal({
 									<FormItem>
 										<div className="flex items-center gap-2">
 											<FormLabel className="text-[14px]">HyperQube_z Pillar Name</FormLabel>
-											<Tooltip delayDuration={200}>
-												<TooltipTrigger asChild>
-													<Info className="h-4 w-4 text-zinc-400 hover:text-foreground transition-colors" />
-												</TooltipTrigger>
-												<TooltipContent side="top" align="center" className="text-[13px]">
+											<Popover>
+												<PopoverTrigger asChild>
+													<Info className="h-4 w-4 text-zinc-400 hover:text-foreground transition-colors cursor-pointer" />
+												</PopoverTrigger>
+												<PopoverContent side="top" align="center" className="w-auto p-2 text-[13px]">
 													<p>Choose a unique name using letters, numbers, and optional<br /> single hyphens, dots, or underscores between characters</p>
-												</TooltipContent>
-											</Tooltip>
+												</PopoverContent>
+											</Popover>
 										</div>
 										<FormControl>
 											<div className="space-y-2 relative">
@@ -258,7 +257,6 @@ export default function RegistrationModal({
 												)}
 												<Input
 													placeholder="my-awesome-pillar"
-													autoFocus
 													{...field}
 													onChange={(e) => {
 														const value = e.target.value;
@@ -285,14 +283,14 @@ export default function RegistrationModal({
 									<FormItem>
 										<div className="flex items-center gap-2">
 											<FormLabel className="text-[14px]">HyperQube_z Owner Address</FormLabel>
-											<Tooltip delayDuration={200}>
-												<TooltipTrigger asChild>
-													<Info className="h-4 w-4 text-zinc-400 hover:text-foreground transition-colors" />
-												</TooltipTrigger>
-												<TooltipContent side="top" align="center" className="text-[13px]">
+											<Popover>
+												<PopoverTrigger asChild>
+													<Info className="h-4 w-4 text-zinc-400 hover:text-foreground transition-colors cursor-pointer" />
+												</PopoverTrigger>
+												<PopoverContent side="top" align="center" className="w-auto p-2 text-[13px]">
 													<p>The address that will own and control this pillar</p>
-												</TooltipContent>
-											</Tooltip>
+												</PopoverContent>
+											</Popover>
 										</div>
 										<FormControl>
 											<div className="space-y-2 relative">
@@ -333,14 +331,14 @@ export default function RegistrationModal({
 									<FormItem>
 										<div className="flex items-center gap-2">
 											<FormLabel className="text-[14px]">HyperQube_z Withdraw Address</FormLabel>
-											<Tooltip delayDuration={200}>
-												<TooltipTrigger asChild>
-													<Info className="h-4 w-4 text-zinc-400 hover:text-foreground transition-colors" />
-												</TooltipTrigger>
-												<TooltipContent side="top" align="center" className="text-[13px]">
+											<Popover>
+												<PopoverTrigger asChild>
+													<Info className="h-4 w-4 text-zinc-400 hover:text-foreground transition-colors cursor-pointer" />
+												</PopoverTrigger>
+												<PopoverContent side="top" align="center" className="w-auto p-2 text-[13px]">
 													<p>The address that will receive pillar rewards</p>
-												</TooltipContent>
-											</Tooltip>
+												</PopoverContent>
+											</Popover>
 										</div>
 										<FormControl>
 											<div className="space-y-2 relative">
@@ -381,14 +379,14 @@ export default function RegistrationModal({
 									<FormItem>
 										<div className="flex items-center gap-2">
 											<FormLabel className="text-[14px]">HyperQube_z Producer Address</FormLabel>
-											<Tooltip delayDuration={200}>
-												<TooltipTrigger asChild>
-													<Info className="h-4 w-4 text-zinc-400 hover:text-foreground transition-colors" />
-												</TooltipTrigger>
-												<TooltipContent side="top" align="center" className="text-[13px]">
+											<Popover>
+												<PopoverTrigger asChild>
+													<Info className="h-4 w-4 text-zinc-400 hover:text-foreground transition-colors cursor-pointer" />
+												</PopoverTrigger>
+												<PopoverContent side="top" align="center" className="w-auto p-2 text-[13px]">
 													<p>The address that will produce momentums</p>
-												</TooltipContent>
-											</Tooltip>
+												</PopoverContent>
+											</Popover>
 										</div>
 										<FormControl>
 											<div className="space-y-2 relative">
@@ -425,14 +423,14 @@ export default function RegistrationModal({
 						<div className="space-y-2">
 							<div className="flex items-center gap-2">
 								<FormLabel className="text-[14px]">Message</FormLabel>
-								<Tooltip delayDuration={200}>
-									<TooltipTrigger asChild>
-										<Info className="h-4 w-4 text-zinc-400 hover:text-foreground transition-colors" />
-									</TooltipTrigger>
-									<TooltipContent side="top" align="center" className="text-[13px]">
-										<p>This is the message text that needs to be signed in ✦ s y r i u s</p>
-									</TooltipContent>
-								</Tooltip>
+								<Popover>
+									<PopoverTrigger asChild>
+										<Info className="h-4 w-4 text-zinc-400 hover:text-foreground transition-colors cursor-pointer" />
+									</PopoverTrigger>
+									<PopoverContent side="right" align="center" className="w-auto p-2 text-[13px]">
+										<p>This is the message text that needs<br /> to be signed in ✦ s y r i u s</p>
+									</PopoverContent>
+								</Popover>
 							</div>
 							<div className="space-y-2">
 								<Textarea
@@ -508,14 +506,14 @@ export default function RegistrationModal({
 									<FormItem>
 										<div className="flex items-center gap-2">
 											<FormLabel className="text-[14px]">Signature</FormLabel>
-											<Tooltip delayDuration={200}>
-												<TooltipTrigger asChild>
-													<Info className="h-4 w-4 text-zinc-400 hover:text-foreground transition-colors" />
-												</TooltipTrigger>
-												<TooltipContent side="top" align="center" className="text-[13px]">
+											<Popover>
+												<PopoverTrigger asChild>
+													<Info className="h-4 w-4 text-zinc-400 hover:text-foreground transition-colors cursor-pointer" />
+												</PopoverTrigger>
+												<PopoverContent side="top" align="center" className="w-auto p-2 text-[13px]">
 													<p>{pillar.alphanet_pillar_name}&apos;s 128-character Ed25519 signature in hexadecimal format</p>
-												</TooltipContent>
-											</Tooltip>
+												</PopoverContent>
+											</Popover>
 										</div>
 										<FormControl>
 											<div className="space-y-2 relative">
