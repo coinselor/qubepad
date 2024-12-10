@@ -17,7 +17,7 @@ const roboto = Roboto({
 
 export const metadata: Metadata = {
 	title: "Qubepad - HyperQube Registration Portal",
-	description: "A signup launchpad for HyperQube powered extension chains",
+	description: "A launchpad for HyperQube-powered extension chains on Zenon Network.",
 };
 
 export default function RootLayout({

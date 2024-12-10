@@ -1,8 +1,8 @@
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+	return twMerge(clsx(inputs));
 }
 
 /**
@@ -12,23 +12,20 @@ export function cn(...inputs: ClassValue[]) {
  * @throws Error if the input is not a valid hex string or has invalid length
  */
 export function hexToBuffer(hex: string): Buffer {
-	// Remove '0x' prefix if present
-	const cleanHex = hex.startsWith('0x') ? hex.slice(2) : hex;
-
-	// Check if the string contains only valid hex characters
+	const cleanHex = hex.startsWith("0x") ? hex.slice(2) : hex;
 	if (!/^[0-9a-fA-F]*$/.test(cleanHex)) {
-	  throw new Error('Invalid hex string');
+		throw new Error("Invalid hex string");
 	}
 
-	// Ensure even length
 	if (cleanHex.length % 2 !== 0) {
-	  throw new Error('Hex string must have an even number of characters');
+		throw new Error("Hex string must have an even number of characters");
 	}
 
-	// For Zenon public keys, validate length (32 bytes = 64 hex chars)
 	if (cleanHex.length !== 64) {
-	  throw new Error('Invalid public key length - must be 32 bytes (64 hex characters)');
+		throw new Error(
+			"Invalid public key length - must be 32 bytes (64 hex characters)"
+		);
 	}
 
-	return Buffer.from(cleanHex, 'hex');
-  }
+	return Buffer.from(cleanHex, "hex");
+}

@@ -1,21 +1,20 @@
 "use client";
 
-import {
-	Dialog,
-	DialogContent,
-	DialogHeader,
-	DialogTitle,
-	DialogDescription,
-} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { useToast } from "@/hooks/use-toast";
+import PillarIcon from "./ui/icons/pillar-icon";
+import { useState } from "react";
+import { config } from "@/lib/config";
+import { Badge } from "@/components/ui/badge";
+import { ExternalLink } from "lucide-react";
 import {
 	Popover,
 	PopoverContent,
 	PopoverTrigger,
 } from "@/components/ui/popover";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Info, Copy } from "lucide-react";
-import { Textarea } from "@/components/ui/textarea";
 import { motion, AnimatePresence } from "framer-motion";
 import {
 	Form,
@@ -37,9 +36,6 @@ import {
 	pillarFormSchema,
 	type PillarFormSchema
 } from "@/lib/validation/pillar";
-import { useToast } from "@/hooks/use-toast";
-import PillarIcon from "./ui/icons/pillar-icon";
-import { useState } from "react";
 
 type FormData = PillarFormSchema;
 
@@ -68,7 +64,46 @@ export default function RegistrationModal({
 		} ${form.watch("hqzOwnerAddress") || "[hqz_owner_address]"
 		} ${form.watch("hqzWithdrawAddress") || "[hqz_withdraw_address]"
 		} ${form.watch("hqzProducerAddress") || "[hqz_producer_address]"
-		} HYPERQUBE LAUNCH`;
+		} `;
+
+	const SignatureSuffix = () => (
+		<Popover>
+			<PopoverTrigger asChild>
+				<Badge
+					variant="success"
+					className="cursor-pointer rounded-sm hover:bg-green-900/80"
+				>
+					{config.signature.messageSuffix}
+				</Badge>
+			</PopoverTrigger>
+			<PopoverContent className="w-80">
+				<div className="space-y-2">
+					<h4 className="font-medium text-sm leading-none">Signature Message Suffix</h4>
+					<p className="text-xs text-muted-foreground">
+						This is a truncated SHA-256 hash of HyperQube&apos;s CoC. By signing this message, you signal your agreement to it.
+					</p>
+					<a
+						href="/CODE_OF_CONDUCT.md"
+						target="_blank"
+						rel="noopener noreferrer"
+						className="inline-flex items-center space-x-1 text-xs text-primary"
+					>
+						<span className="text-green-400">View Code of Conduct</span>
+						<ExternalLink className="h-3 w-3 text-green-400" />
+					</a>
+				</div>
+			</PopoverContent>
+		</Popover>
+	);
+
+	const fullMessageString = `${messageString}${config.signature.messageSuffix}`;
+
+	const messageStringWithSuffix = (
+		<div className="font-mono text-zinc-400 text-xs p-3 rounded-md border border-zinc-700 border-input bg-transparent">
+			{messageString}
+			<SignatureSuffix />
+		</div>
+	);
 
 	const getFormProgress = () => {
 		const fields: (keyof FormData)[] = ['hqzName', 'hqzOwnerAddress', 'hqzWithdrawAddress', 'hqzProducerAddress'];
@@ -85,20 +120,18 @@ export default function RegistrationModal({
 
 	const copyMessageString = async () => {
 		try {
-			await navigator.clipboard.writeText(messageString);
+			await navigator.clipboard.writeText(fullMessageString);
 			setIsCopied(true);
 			setTimeout(() => setIsCopied(false), 2000);
 			toast({
-				title: "Copied!",
-				description: "Message string copied to clipboard",
+				description: "Message copied to clipboard",
 			});
-		} catch (err) {
+		} catch (error) {
+			console.error("Failed to copy message:", error);
 			toast({
 				variant: "destructive",
-				title: "Error",
-				description: "Failed to copy message string",
+				description: "Failed to copy message",
 			});
-			console.error(err);
 		}
 	};
 
@@ -433,13 +466,9 @@ export default function RegistrationModal({
 								</Popover>
 							</div>
 							<div className="space-y-2">
-								<Textarea
-									value={messageString}
-									readOnly
-									disabled={true}
-									className="!font-space !text-[13px] resize-none"
-									rows={5}
-								/>
+								<div className="space-y-2 text-sm">
+									{messageStringWithSuffix}
+								</div>
 								<div className="flex gap-1 mt-2 mb-1">
 									{validSteps.map((isValid, index) => (
 										<div

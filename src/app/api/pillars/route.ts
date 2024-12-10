@@ -4,6 +4,7 @@ import { pillarsTable } from "@/db/schema";
 import { desc, eq } from "drizzle-orm";
 import { ZnnAddress } from "@/lib/znn-address";
 import { hexToBuffer } from "@/lib/utils";
+import { config } from "@/lib/config";
 
 export async function GET() {
 	const pillars = await db
@@ -23,7 +24,6 @@ export async function PUT(request: Request) {
 	try {
 		const { pillarName, data } = await request.json();
 
-		// Get the pillar from database first
 		const pillar = await db
 			.select()
 			.from(pillarsTable)
@@ -37,38 +37,44 @@ export async function PUT(request: Request) {
 			);
 		}
 
-		// Verify public key matches pillar address
 		try {
 			const pubKeyBuffer = hexToBuffer(data.publicKey);
-			if (!ZnnAddress.verifyPublicKey(pillar[0].alphanet_pillar_address, pubKeyBuffer)) {
+			if (
+				!ZnnAddress.verifyPublicKey(
+					pillar[0].alphanet_pillar_address,
+					pubKeyBuffer
+				)
+			) {
 				return NextResponse.json(
 					{ error: "Public key does not match pillar's address" },
 					{ status: 400 }
 				);
 			}
 		} catch (error) {
-			console.error('Invalid public key format:', error);
+			console.error("Invalid public key format:", error);
 			return NextResponse.json(
 				{ error: "Invalid public key format" },
 				{ status: 400 }
 			);
 		}
 
-		const messageString = `${pillarName} ${data.hqz_pillar_name} ${data.hqz_owner_address} ${data.hqz_withdraw_address} ${data.hqz_producer_address} HYPERQUBE LAUNCH`;
+		const messageString = `${pillarName} ${data.hqz_pillar_name} ${data.hqz_owner_address} ${data.hqz_withdraw_address} ${data.hqz_producer_address} ${config.signature.messageSuffix}`;
 
-		// Call ZenonHub API to verify signature
-		const verifyResponse = await fetch('https://zenonhub.io/api/utilities/verify-signed-message', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({
-				public_key: data.publicKey,
-				message: messageString,
-				signature: data.signature,
-				address: pillar[0].alphanet_pillar_address
-			})
-		});
+		const verifyResponse = await fetch(
+			"https://zenonhub.io/api/utilities/verify-signed-message",
+			{
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					public_key: data.publicKey,
+					message: messageString,
+					signature: data.signature,
+					address: pillar[0].alphanet_pillar_address,
+				}),
+			}
+		);
 
 		const verifyResult = await verifyResponse.json();
 
@@ -80,7 +86,6 @@ export async function PUT(request: Request) {
 		}
 
 		try {
-			// Update the pillar in the database with verified data
 			await db
 				.update(pillarsTable)
 				.set({
@@ -98,17 +103,20 @@ export async function PUT(request: Request) {
 
 			return NextResponse.json({
 				message: "Pillar updated successfully",
-				pillarName: pillar[0].alphanet_pillar_name
+				pillarName: pillar[0].alphanet_pillar_name,
 			});
 		} catch (error) {
-			console.error('Database update error:', error);
+			console.error("Database update error:", error);
 			return NextResponse.json(
 				{ error: "Failed to update pillar data" },
 				{ status: 500 }
 			);
 		}
 	} catch (error) {
-		console.error('Server error:', error);
-		return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+		console.error("Server error:", error);
+		return NextResponse.json(
+			{ error: "Internal Server Error" },
+			{ status: 500 }
+		);
 	}
 }

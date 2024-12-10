@@ -6,8 +6,6 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
-
-
 const HyperCube = () => {
 	const [rotation, setRotation] = useState({ x: 0, y: 0, z: 0 });
 

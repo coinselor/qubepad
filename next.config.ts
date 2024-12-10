@@ -1,7 +1,10 @@
+import { generateCoCHash } from "@/actions/generateCoCHash";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+	env: {
+		NEXT_PUBLIC_DEFAULT_SIGNATURE_MESSAGE_SUFFIX: generateCoCHash(),
+	},
 };
 
 export default nextConfig;

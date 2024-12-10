@@ -1,5 +1,5 @@
 {
-	"name": "hypercube-signup",
+	"name": "Qubepad",
 	"version": "0.1.0",
 	"private": true,
 	"scripts": {
@@ -19,7 +19,6 @@
 		"@radix-ui/react-toast": "^1.2.2",
 		"@radix-ui/react-tooltip": "^1.1.4",
 		"@react-three/fiber": "9.0.0-beta.1",
-		"@types/three": "^0.170.0",
 		"@vercel/postgres": "^0.10.0",
 		"bech32": "^2.0.0",
 		"class-variance-authority": "^0.7.0",
@@ -38,7 +37,6 @@
 		"swr": "^2.2.5",
 		"tailwind-merge": "^2.5.4",
 		"tailwindcss-animate": "^1.0.7",
-		"three": "^0.170.0",
 		"zod": "^3.23.8"
 	},
 	"devDependencies": {

@@ -26,11 +26,9 @@ export default function PillarsData() {
 
 			if (result.data) {
 				const csvContent = [
-					// CSV Headers
 					["Pillar Name", "Pillar Address", "Public Key", "Signature", "HQZ Name",
 						"HQZ Owner", "HQZ Withdraw", "HQZ Producer", "Status", "Weight",
 						"Created At", "Updated At", "Verified At"].join(","),
-					// CSV Data
 					...result.data.map(pillar => [
 						pillar.alphanet_pillar_name,
 						pillar.alphanet_pillar_address,
