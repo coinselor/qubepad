@@ -83,7 +83,7 @@ export default function RegistrationModal({
 						This is a truncated SHA-256 hash of HyperQube&apos;s CoC. By signing this message, you signal your agreement to it.
 					</p>
 					<a
-						href="/CODE_OF_CONDUCT.md"
+						href="https://github.com/coinselor/qubepad/blob/main/CODE_OF_CONDUCT.md"
 						target="_blank"
 						rel="noopener noreferrer"
 						className="inline-flex items-center space-x-1 text-xs text-primary"
@@ -200,7 +200,7 @@ export default function RegistrationModal({
 	};
 
 	return (
-		<Dialog open={true} onOpenChange={onClose}>
+		<Dialog open={true} onOpenChange={onClose} modal={false}>
 			<DialogContent className="sm:max-w-[500px]">
 				<DialogHeader>
 					<DialogTitle>Register {pillar.alphanet_pillar_name}</DialogTitle>
