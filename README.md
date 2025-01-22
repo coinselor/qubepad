@@ -56,6 +56,6 @@ This implementation ensures message consistency across the application while all
 
 ## Code of Conduct
 
-Please note that this project adheres to a [Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project, you agree to abide by its terms.
+Please note that this project adheres to the HyperQube [Code of Conduct](https://github.com/hypercore-one/hyperqube_z/blob/hyperqube_z/CODE_OF_CONDUCT.md). By participating in this project, you agree to abide by its terms.
 
 Built by Aliens

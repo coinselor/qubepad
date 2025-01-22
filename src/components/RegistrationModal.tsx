@@ -83,7 +83,7 @@ export default function RegistrationModal({
 						This is a truncated SHA-256 hash of HyperQube&apos;s CoC. By signing this message, you signal your agreement to it.
 					</p>
 					<a
-						href="https://github.com/coinselor/qubepad/blob/main/CODE_OF_CONDUCT.md"
+						href="https://github.com/hypercore-one/hyperqube_z/blob/hyperqube_z/CODE_OF_CONDUCT.md"
 						target="_blank"
 						rel="noopener noreferrer"
 						className="inline-flex items-center space-x-1 text-xs text-primary"
