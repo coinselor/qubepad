@@ -80,7 +80,7 @@ export default function RegistrationModal({
 				<div className="space-y-2">
 					<h4 className="font-medium text-sm leading-none">Signature Message Suffix</h4>
 					<p className="text-xs text-muted-foreground">
-						This is a truncated SHA-256 hash of HyperQube&apos;s CoC. By signing this message, you signal your agreement to it.
+						This is a truncated SHA-1 hash of HyperQube&apos;s CoC. By signing this message, you signal your agreement to it.
 					</p>
 					<a
 						href="https://github.com/hypercore-one/hyperqube_z/blob/hyperqube_z/CODE_OF_CONDUCT.md"
