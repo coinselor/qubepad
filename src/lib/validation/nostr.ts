@@ -14,6 +14,9 @@ export function isValidNostrPubkey(pubkey: string): boolean {
     
     return data.length === 32;
   } catch (error) {
+    if (typeof process !== 'undefined' && process.env.NODE_ENV === 'development') {
+      console.error('Invalid Nostr pubkey:', error);
+    }
     return false;
   }
 }
