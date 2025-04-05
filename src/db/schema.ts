@@ -13,6 +13,7 @@ export const pillarsTable = pgTable("pillars", {
 	alphanet_pillar_address: text("alphanet_pillar_address").notNull().unique(),
 	alphanet_pillar_public_key: text("alphanet_pillar_public_key").unique(),
 	alphanet_pillar_signature: text("alphanet_pillar_signature").unique(),
+	nostr_pubkey: text("nostr_pubkey"),
 	hqz_pillar_name: text("hqz_pillar_name"),
 	hqz_owner_address: text("hqz_owner_address"),
 	hqz_withdraw_address: text("hqz_withdraw_address"),
@@ -25,4 +26,10 @@ export const pillarsTable = pgTable("pillars", {
 	created_at: timestamp("created_at").defaultNow().notNull(),
 	updated_at: timestamp("updated_at").defaultNow().notNull(),
 	verified_at: timestamp("verified_at"),
+});
+
+export const system = pgTable("system", {
+	id: serial("id").primaryKey(),
+	last_pillar_update: timestamp("last_pillar_update"),
+	updated_at: timestamp("updated_at").defaultNow().notNull(),
 });

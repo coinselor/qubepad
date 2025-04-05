@@ -5,6 +5,7 @@ import { desc, eq } from "drizzle-orm";
 import { ZnnAddress } from "@/lib/znn-address";
 import { hexToBuffer } from "@/lib/utils";
 import { config } from "@/lib/config";
+import { isValidNostrPubkey } from "@/lib/validation/nostr";
 
 export async function GET() {
 	const pillars = await db
@@ -58,7 +59,14 @@ export async function PUT(request: Request) {
 			);
 		}
 
-		const messageString = `${pillarName} ${data.hqz_pillar_name} ${data.hqz_owner_address} ${data.hqz_withdraw_address} ${data.hqz_producer_address} ${config.signature.messageSuffix}`;
+		if (data.nostr_pubkey && !isValidNostrPubkey(data.nostr_pubkey)) {
+			return NextResponse.json(
+				{ error: "Invalid Nostr public key format" },
+				{ status: 400 }
+			);
+		}
+
+		const messageString = `${pillarName} ${data.hqz_pillar_name} ${data.hqz_owner_address} ${data.hqz_withdraw_address} ${data.hqz_producer_address} ${data.nostr_pubkey} ${config.signature.messageSuffix}`;
 
 		const verifyResponse = await fetch(
 			"https://zenonhub.io/api/utilities/verify-signed-message",
@@ -93,6 +101,7 @@ export async function PUT(request: Request) {
 					hqz_owner_address: data.hqz_owner_address,
 					hqz_withdraw_address: data.hqz_withdraw_address,
 					hqz_producer_address: data.hqz_producer_address,
+					nostr_pubkey: data.nostr_pubkey,
 					alphanet_pillar_public_key: data.publicKey,
 					alphanet_pillar_signature: data.signature,
 					status: "Registered",

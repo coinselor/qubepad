@@ -2,17 +2,17 @@
 import { useState } from "react";
 
 import { Input } from "./ui/input";
-import { Search, Download, Loader, RefreshCw } from "lucide-react";
+import { Search, Download, Loader } from "lucide-react";
 import { Button } from "./ui/button";
 import PillarTable from "@/components/PillarsTable";
 import { exportPillars } from "@/actions/exportPillars";
-import { fetchAndUpsertPillars } from "@/actions/fetchAndUpsertPillars";
 import { useToast } from "@/hooks/use-toast";
+import NostrAnnouncement from "./NostrAnnouncement";
+import LastUpdateFooter from "./LastUpdateFooter";
 
 export default function PillarsData() {
 	const [searchQuery, setSearchQuery] = useState<string>("");
 	const [isExporting, setIsExporting] = useState(false);
-	const [isSyncing, setIsSyncing] = useState(false);
 	const { toast } = useToast();
 
 	const handleExport = async () => {
@@ -26,7 +26,7 @@ export default function PillarsData() {
 
 			if (result.data) {
 				const csvContent = [
-					["Pillar Name", "Pillar Address", "Public Key", "Signature", "HQZ Name",
+					["Pillar Name", "Pillar Address", "Public Key", "Signature", "Nostr Public Key", "HQZ Name",
 						"HQZ Owner", "HQZ Withdraw", "HQZ Producer", "Status", "Weight",
 						"Created At", "Updated At", "Verified At"].join(","),
 					...result.data.map(pillar => [
@@ -34,6 +34,7 @@ export default function PillarsData() {
 						pillar.alphanet_pillar_address,
 						pillar.alphanet_pillar_public_key,
 						pillar.alphanet_pillar_signature,
+						pillar.nostr_pubkey,
 						pillar.hqz_pillar_name,
 						pillar.hqz_owner_address,
 						pillar.hqz_withdraw_address,
@@ -78,27 +79,6 @@ export default function PillarsData() {
 		}
 	};
 
-	const syncPillars = async () => {
-		if (isSyncing) return;
-		try {
-			setIsSyncing(true);
-			await fetchAndUpsertPillars();
-			toast({
-				title: "Sync Successful",
-				description: "Pillar data has been updated.",
-			});
-		} catch (error) {
-			console.error("Sync failed:", error);
-			toast({
-				title: "Sync Failed",
-				description: "Failed to sync pillar data. Will retry later.",
-				variant: "destructive",
-			});
-		} finally {
-			setIsSyncing(false);
-		}
-	};
-
 	return (
 		<div className="w-full max-w-3xl mx-auto mt-4 md:mt-8 px-4 md:px-0 space-y-4">
 			<div className="w-full flex gap-2">
@@ -114,16 +94,6 @@ export default function PillarsData() {
 				<Button
 					variant="outline"
 					size="icon"
-					onClick={syncPillars}
-					disabled={true}
-					title="Sync data"
-					className="mr-2"
-				>
-					<RefreshCw className={`h-4 w-4 ${isSyncing ? 'animate-spin' : ''}`} />
-				</Button>
-				<Button
-					variant="outline"
-					size="icon"
 					onClick={handleExport}
 					disabled={isExporting}
 					title="Export data"
@@ -135,9 +105,13 @@ export default function PillarsData() {
 					)}
 				</Button>
 			</div>
+			
+			<NostrAnnouncement />
+			
 			<div className="w-full">
 				<PillarTable searchQuery={searchQuery} />
 			</div>
+			<LastUpdateFooter />
 		</div>
 	);
 }

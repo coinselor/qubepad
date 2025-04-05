@@ -3,6 +3,7 @@ export type Pillar = {
   alphanet_pillar_address: string;
   alphanet_pillar_public_key: string | null;
   alphanet_pillar_signature: string | null;
+  nostr_pubkey?: string | null;
   hqz_pillar_name?: string | null;
   hqz_owner_address?: string | null;
   hqz_withdraw_address?: string | null;

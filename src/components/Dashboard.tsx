@@ -2,9 +2,10 @@
 import { useMemo } from "react";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Users2, Weight } from "lucide-react";
+import { Weight } from "lucide-react";
 import useSWR from "swr";
 import { Pillar } from "@/types/Pillar";
+import PillarIcon from "./ui/icons/pillar-icon";
 
 export default function Dashboard() {
 	const { data: pillars } = useSWR<Pillar[]>("/api/pillars");
@@ -54,10 +55,10 @@ export default function Dashboard() {
 							<div>
 								<div className="text-sm text-zinc-400 font-mono lowercase">Registered Pillars</div>
 								<div className="text-2xl font-space">
-									{stats.registered}/{stats.total}
+									<span className="text-green-500">{stats.registered}</span>/{stats.total}
 								</div>
 							</div>
-							<Users2 className="h-8 w-8 text-zinc-700" />
+							<PillarIcon className="h-8 w-8 text-zinc-700" />
 						</div>
 						<Progress value={(stats.registered / stats.total) * 100} className="h-1" />
 					</div>

@@ -19,7 +19,7 @@ interface FrontierAccountBlockResponse {
 export async function fetchAndUpsertPillars() {
 	try {
 		const response = await fetch(
-			"https://zenonhub.io/api/nom/pillars/get-all"
+			"https://zenonhub.io/api/nom/pillar/get-all"
 		);
 
 		if (!response.ok) {
@@ -129,8 +129,4 @@ export async function fetchAndUpsertPillars() {
 	} catch (error) {
 		console.error("Error fetching and upserting pillars:", error);
 	}
-}
-
-export async function scheduledPillarSync() {
-	await fetchAndUpsertPillars();
 }

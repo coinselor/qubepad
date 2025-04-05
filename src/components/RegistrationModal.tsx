@@ -29,6 +29,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ZnnAddress } from "@/lib/znn-address";
 import { hexToBuffer } from "@/lib/utils";
+import { isValidNostrPubkey } from "@/lib/validation/nostr";
 import {
 	PILLAR_NAME_MAX_LENGTH,
 	PILLAR_NAME_REGEX,
@@ -51,6 +52,7 @@ export default function RegistrationModal({
 		resolver: zodResolver(pillarFormSchema),
 		defaultValues: {
 			publicKey: pillar.alphanet_pillar_public_key || "",
+			nostrPubkey: pillar.nostr_pubkey || "",
 			hqzName: pillar.hqz_pillar_name || "",
 			hqzOwnerAddress: pillar.hqz_owner_address || "",
 			hqzWithdrawAddress: pillar.hqz_withdraw_address || "",
@@ -64,6 +66,7 @@ export default function RegistrationModal({
 		} ${form.watch("hqzOwnerAddress") || "[hqz_owner_address]"
 		} ${form.watch("hqzWithdrawAddress") || "[hqz_withdraw_address]"
 		} ${form.watch("hqzProducerAddress") || "[hqz_producer_address]"
+		} ${form.watch("nostrPubkey") || "[nostr_pubkey]"	
 		} `;
 
 	const SignatureSuffix = () => (
@@ -106,7 +109,7 @@ export default function RegistrationModal({
 	);
 
 	const getFormProgress = () => {
-		const fields: (keyof FormData)[] = ['hqzName', 'hqzOwnerAddress', 'hqzWithdrawAddress', 'hqzProducerAddress'];
+		const fields: (keyof FormData)[] = ['hqzName', 'hqzOwnerAddress', 'hqzWithdrawAddress', 'hqzProducerAddress', 'nostrPubkey'];
 		return fields.map(field => {
 			const fieldState = form.getFieldState(field);
 			return !fieldState.invalid && form.getValues(field);
@@ -159,6 +162,7 @@ export default function RegistrationModal({
 						hqz_withdraw_address: data.hqzWithdrawAddress,
 						hqz_producer_address: data.hqzProducerAddress,
 						signature: data.signature,
+						nostr_pubkey: data.nostrPubkey,
 					},
 				}),
 			});
@@ -451,6 +455,54 @@ export default function RegistrationModal({
 								)
 							}}
 						/>
+						<FormField
+							control={form.control}
+							name="nostrPubkey"
+							render={({ field }) => {
+								const value = field.value || '';
+								return (
+									<FormItem>
+										<div className="flex items-center gap-2">
+											<FormLabel className="text-[14px]">{pillar.alphanet_pillar_name} Nostr Public Key</FormLabel>
+											<Popover>
+												<PopoverTrigger asChild>
+													<Info className="h-4 w-4 text-zinc-400 hover:text-foreground transition-colors cursor-pointer" />
+												</PopoverTrigger>
+												<PopoverContent side="top" align="center" className="w-auto p-2 text-[13px]">
+													<p>The address that will sign Nostr events for this pillar</p>
+												</PopoverContent>
+											</Popover>
+										</div>
+										<FormControl>
+											<div className="space-y-2 relative">
+												{value && (
+													<div className="absolute right-0 -top-5 text-[13px] opacity-80 text-center">
+														<span className={`${isValidNostrPubkey(value)
+															? "text-green-600"
+															: "text-gray-500"
+															}`}>
+															{isValidNostrPubkey(value) ? "valid" : "invalid"}
+														</span>
+													</div>
+												)}
+												<Input
+													placeholder="npub1..."
+													{...field}
+													onChange={(e) => {
+														const value = e.target.value;
+														field.onChange(value);
+													}}
+													error={!!form.formState.errors.nostrPubkey}
+													className="font-space"
+												/>
+												<div className="absolute top-0 right-0 bottom-0 w-12 pointer-events-none bg-gradient-to-r from-transparent to-background" />
+											</div>
+										</FormControl>
+										<FormMessage className="text-xs text-center" />
+									</FormItem>
+								)
+							}}
+						/>
 
 
 						<div className="space-y-2">
@@ -465,65 +517,63 @@ export default function RegistrationModal({
 									</PopoverContent>
 								</Popover>
 							</div>
-							<div className="space-y-2">
-								<div className="space-y-2 text-sm">
-									{messageStringWithSuffix}
-								</div>
-								<div className="flex gap-1 mt-2 mb-1">
-									{validSteps.map((isValid, index) => (
-										<div
-											key={index}
-											className={`h-1 flex-1 rounded-full transition-colors duration-300 ${isValid ? 'bg-green-600' : 'bg-zinc-200 dark:bg-zinc-800'
-												}`}
-										/>
-									))}
-								</div>
-								<AnimatePresence mode="wait">
-									{messageString && (
-										<motion.div
-											initial={{ opacity: 0, scale: 0.95 }}
-											animate={{ opacity: 1, scale: 1 }}
-											exit={{ opacity: 0, scale: 0.95 }}
-											transition={{ duration: 0.2 }}
-											className="w-full"
-										>
-											<Button
-												type="button"
-												variant="outline"
-												className="w-full"
-												onClick={copyMessageString}
-												disabled={!isFormComplete}
-											>
-												<AnimatePresence mode="wait">
-													{isCopied ? (
-														<motion.div
-															key="copied"
-															initial={{ opacity: 0, y: 20 }}
-															animate={{ opacity: 1, y: 0 }}
-															exit={{ opacity: 0, y: -20 }}
-															className="flex items-center gap-2"
-														>
-															<Copy className="h-4 w-4" />
-															<span>Copied!</span>
-														</motion.div>
-													) : (
-														<motion.div
-															key="copy"
-															initial={{ opacity: 0, y: 20 }}
-															animate={{ opacity: 1, y: 0 }}
-															exit={{ opacity: 0, y: -20 }}
-															className="flex items-center gap-2"
-														>
-															<Copy className="h-4 w-4" />
-															<span>Copy Message</span>
-														</motion.div>
-													)}
-												</AnimatePresence>
-											</Button>
-										</motion.div>
-									)}
-								</AnimatePresence>
+							<div className="space-y-2 text-sm">
+								{messageStringWithSuffix}
 							</div>
+							<div className="flex gap-1 mt-2 mb-1">
+								{validSteps.map((isValid, index) => (
+									<div
+										key={index}
+										className={`h-1 flex-1 rounded-full transition-colors duration-300 ${isValid ? 'bg-green-600' : 'bg-zinc-200 dark:bg-zinc-800'
+											}`}
+									/>
+								))}
+							</div>
+							<AnimatePresence mode="wait">
+								{messageString && (
+									<motion.div
+										initial={{ opacity: 0, scale: 0.95 }}
+										animate={{ opacity: 1, scale: 1 }}
+										exit={{ opacity: 0, scale: 0.95 }}
+										transition={{ duration: 0.2 }}
+										className="w-full"
+									>
+										<Button
+											type="button"
+											variant="outline"
+											className="w-full"
+											onClick={copyMessageString}
+											disabled={!isFormComplete}
+										>
+											<AnimatePresence mode="wait">
+												{isCopied ? (
+													<motion.div
+														key="copied"
+														initial={{ opacity: 0, y: 20 }}
+														animate={{ opacity: 1, y: 0 }}
+														exit={{ opacity: 0, y: -20 }}
+														className="flex items-center gap-2"
+													>
+														<Copy className="h-4 w-4" />
+														<span>Copied!</span>
+													</motion.div>
+												) : (
+													<motion.div
+														key="copy"
+														initial={{ opacity: 0, y: 20 }}
+														animate={{ opacity: 1, y: 0 }}
+														exit={{ opacity: 0, y: -20 }}
+														className="flex items-center gap-2"
+													>
+														<Copy className="h-4 w-4" />
+														<span>Copy Message</span>
+													</motion.div>
+												)}
+											</AnimatePresence>
+										</Button>
+									</motion.div>
+								)}
+							</AnimatePresence>
 						</div>
 						<hr className="my-6 border-t border-dashed border-zinc-600 dark:border-zinc-800" />
 						<FormField

@@ -18,6 +18,7 @@ This project is a work in progress and still not fully configurable.
 -   Styling: Tailwind CSS
 -   Form Handling: React Hook Form with Zod validation
 -   Data Fetching: SWR
+-   Automation: Vercel Cron Jobs
 
 ## Setup
 
@@ -34,6 +35,7 @@ This project is a work in progress and still not fully configurable.
 
     - `DATABASE_URL`: Your Postgres connection string
     - `NEXT_PUBLIC_SIGNATURE_MESSAGE_SUFFIX`: The suffix message used for signature verification (default: "HYPERQUBE LAUNCH")
+    - `CRON_SECRET`: A strong random string to secure cron job endpoints
 
 5. Push the database schema:
     ```bash
@@ -53,6 +55,24 @@ The signature message suffix is implemented with a three-tier fallback system:
 3. **Default Value**: Falls back to "HYPERQUBE LAUNCH" if neither of the above are available
 
 This implementation ensures message consistency across the application while allowing for easy customization. The Code of Conduct hash option creates a verifiable link between the registration process and the project's community guidelines.
+
+## Automated Updates
+
+Pillar data is automatically updated from [ZenonHub](https://zenonhub.io) every 12 hours using Vercel Cron Jobs. The system tracks the last update time and displays it in the UI. To enable this feature in production:
+
+1. Set the `CRON_SECRET` environment variable to a strong random string
+2. Ensure the `vercel.json` file contains the cron job configuration:
+   ```json
+   {
+     "crons": [
+       {
+         "path": "/api/cron/update-pillars",
+         "schedule": "0 */12 * * *"
+       }
+     ]
+   }
+   ```
+3. Deploy to Vercel, which will automatically schedule and run the cron job
 
 ## Code of Conduct
 
