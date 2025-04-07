@@ -12,7 +12,7 @@ export async function GET(request: Request) {
   const userAgent = request.headers.get('User-Agent') || '';
   
   const isVercelCron = 
-    userAgent.includes('Vercel') && 
+    userAgent.includes('vercel-cron/1.0') && 
     authHeader === `Bearer ${process.env.CRON_SECRET}`;
     
   if (!isVercelCron && process.env.NODE_ENV !== 'development') {
