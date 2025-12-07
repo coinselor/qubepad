@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { motion } from "motion/react";
+import { motion, easeInOut } from "motion/react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -50,26 +50,19 @@ const HyperCube = () => {
 	}), [calculatePoints]);
 
 	const jumpAnimation = useMemo(() => {
-		const baseHeight = 40;
-		const bounceHeight = 70;
+		const baseHeight = 10;
 		return {
 			y: [
 				baseHeight,
-				baseHeight - bounceHeight,
-				baseHeight + 2,
+				baseHeight - 8,
+				baseHeight - 8,
 				baseHeight
 			],
 			transition: {
-				y: {
-					duration: 2.4,
-					repeat: Infinity,
-					times: [0, 0.25, 0.95, 1],
-					ease: [
-						"easeOut",
-						"easeIn",
-						"easeOut"
-					]
-				}
+				duration: 2.4,
+				repeat: Infinity,
+				times: [0, 0.25, 0.95, 1],
+				ease: easeInOut
 			}
 		};
 	}, []);
