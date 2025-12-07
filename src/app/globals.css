@@ -1,6 +1,13 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@source "./src/**/*.{js,ts,jsx,tsx,mdx}";
+
+
+@theme {
+  --color-red-900: #ef4444;
+  --radius-md: 4px;
+  --radius-lg: 2px;
+  --font-space: var(--font-space-mono), monospace;
+}
 
 /* Workaround for browser autofill styles */
 input:-webkit-autofill,
@@ -8,3 +15,4 @@ input:-webkit-autofill:hover,
 input:-webkit-autofill:focus {
 	transition: background-color 5000s ease-in-out 0s;
 }
+
